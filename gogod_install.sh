@@ -30,10 +30,10 @@ apt-get -qq update
 if [ "$(whoami)" != "root" ]; then
     SUDO=sudo
 fi
-${SUDO} apt-get -y install apt-transport-https lsb-release ca-certificates curl
+${SUDO} apt-get -qq install apt-transport-https lsb-release ca-certificates curl -y
 ${SUDO} wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 ${SUDO} sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
-${SUDO} apt-get update
+${SUDO} apt-get -qq update
 
 echo " [step 2 of 4] installing GoGoD dependencies..."
 set -e
