@@ -40,6 +40,7 @@ set -e
 # Dependencies
 apt-get -qq install python-setuptools -y
 apt-get -qq install python-dev -y
+apt-get -qq install python-rpi.gpio -y
 apt-get -qq install python-pycurl -y
 apt-get -qq install libffi-dev -y
 apt-get -qq install libssl-dev -y
@@ -55,7 +56,6 @@ apt-get -qq install python-gammu -y
 apt-get install python-opencv -y
 
 echo " [step 3 of 4] installing python modules..."
-pip install RPi.GPIO
 pip install pyserial
 pip install tornado
 pip install wifi
