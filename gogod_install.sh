@@ -38,34 +38,33 @@ ${SUDO} apt-get -qq update
 echo " [step 2 of 4] installing GoGoD dependencies..."
 set -e
 # Dependencies
-apt-get -qq install python-setuptools -y
-apt-get -qq install python-dev -y
-apt-get -qq install python-rpi.gpio -y
-apt-get -qq install python-pycurl -y
+apt-get -qq install python3-setuptools -y
+apt-get -qq install python3-rpi.gpio -y
+apt-get -qq install python3-pycurl -y
 apt-get -qq install libffi-dev -y
 apt-get -qq install libssl-dev -y
 #install pip
-curl https://bootstrap.pypa.io/pip/2.7/get-pip.py | python
+curl https://bootstrap.pypa.io/get-pip.py | python3
 apt-get -qq install vlc -y
 apt-get -qq install php5.6-gd -y
 apt-get -qq install php5.6 -y
 apt-get -qq install gammu -y
 apt-get -qq install usb-modeswitch -y
-apt-get -qq install python-gammu -y
+apt-get -qq install python3-gammu -y
 
-apt-get install python-opencv -y
+apt-get install python3-opencv -y
 
 echo " [step 3 of 4] installing python modules..."
-pip install pyserial
-pip install tornado
-pip install wifi
-pip install websocket-client
-pip install pycrypto
-pip install requests
-pip install EasyProcess
-pip install python-telegram-bot --upgrade
-pip install telepot --upgrade
-pip install paho-mqtt
+pip3 install pyserial
+pip3 install tornado
+pip3 install wifi
+pip3 install websocket-client
+pip3 install pycrypto
+pip3 install requests
+pip3 install EasyProcess
+pip3 install python-telegram-bot --upgrade
+pip3 install telepot --upgrade
+pip3 install paho-mqtt
 
 echo " [step 3 of 4] configurating serial port..."
 
@@ -92,7 +91,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python /opt/gogod/gogod.py > /var/log/gogod/log.log 2>&1
+ExecStart=/usr/bin/python3 /opt/gogod/gogod.py > /var/log/gogod/log.log 2>&1
 Restart=on-abort
 
 [Install]
