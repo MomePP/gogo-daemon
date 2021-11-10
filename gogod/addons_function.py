@@ -152,7 +152,7 @@ class AddOnsManager():
         # p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         p = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
-        # print err
+        # print(err)
         return {'result': err == "", 'error': err}
 
     def corect_filename(self, name):
@@ -199,4 +199,4 @@ class AddOnsManager():
 
 if __name__ == '__main__':
     addons = AddOnsManager()
-    print addons.list_files()
+    print(addons.list_files())

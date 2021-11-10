@@ -73,7 +73,7 @@ class CameraControl():
             faces = cv.HaarDetectObjects(small_img, self.cascade, cv.CreateMemStorage(0),
                                          self.haar_scale, self.min_neighbors, self.haar_flags, self.min_size)
             t = cv.GetTickCount() - t
-            #		print "time taken for detection = %gms" % (t/(cv.GetTickFrequency()*1000.))
+            #		print("time taken for detection = %gms" % (t/(cv.GetTickFrequency()*1000.)))
             if faces:
                 face_found = True
 
@@ -120,7 +120,7 @@ class CameraControl():
 
         except:
             self.close_camera()
-            print "Error in use_camera"
+            print("Error in use_camera")
             pass
 
     def close_camera(self):
@@ -134,7 +134,7 @@ class CameraControl():
             del self.capture
             self.capture = None
         except:
-            print "Error in close_camera"
+            print("Error in close_camera")
             pass
 
     def camera_is_on(self):
@@ -258,5 +258,5 @@ if __name__ == '__main__':
 
     c.use_camera()
     while 1:
-        print c.face_found()
+        print(c.face_found())
         time.sleep(0.5)

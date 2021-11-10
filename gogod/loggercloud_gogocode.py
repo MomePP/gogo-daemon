@@ -141,7 +141,7 @@ class CloudDataThread(threading.Thread):
             self.prepareData(data_name, data_value)
     
     def pub_log(self, data_channel, data_name, data_value):
-        # print data_channel, data_name, data_value
+        # print(data_channel, data_name, data_value)
         self.preparePubData(data_channel, data_name, data_value)
         # if self.uid is not None:
         #     self.prepareData(data_name, data_value)

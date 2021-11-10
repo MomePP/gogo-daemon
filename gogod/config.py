@@ -102,7 +102,7 @@ class Config():
             data = json.load(jsonFile)
             jsonFile.close()
 
-            for key, value in params.iteritems():
+            for key, value in params.items():
 
                 if not self.is_valid_config_name(key):
                     continue
@@ -207,7 +207,7 @@ class Config():
         cmd = "python -m py_compile %s" % filename
         p = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
-        #print err
+        #print(err)
         return {'result': err == "", 'error': err}
 
     def get_account(self, param):
@@ -236,7 +236,7 @@ class Config():
         return True
 
     def getPushbulletToken(self):
-        # print "Config : Getting Pushbullet Token"
+        # print("Config : Getting Pushbullet Token")
         return self.get(self.pushbullet_token)
 
     def savePushbulletToken(self, token):
@@ -308,7 +308,7 @@ class Config():
 
     def auto_filepath_image(self, filename):
         filename = self.auto_filename_image(filename)
-        print filename
+        print(filename)
         return os.path.join(MEDIA_PATH, filename)
 
     def auto_filename_sound(self, filename):
@@ -377,5 +377,5 @@ class Encryption:
 
 if __name__ == "__main__":
     con = Config()
-    #print con.set_addons_enable_active('telegrambot.py')
-    print con.get_addons()
+    #print(con.set_addons_enable_active('telegrambot.py'))
+    print(con.get_addons())

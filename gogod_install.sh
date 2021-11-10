@@ -39,6 +39,7 @@ echo " [step 2 of 4] installing GoGoD dependencies..."
 set -e
 # Dependencies
 apt-get -qq install python3-setuptools -y
+apt-get -qq install python3-dev -y
 apt-get -qq install python3-rpi.gpio -y
 apt-get -qq install python3-pycurl -y
 apt-get -qq install libffi-dev -y

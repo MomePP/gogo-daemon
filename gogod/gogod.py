@@ -23,7 +23,6 @@ import const
 import sms
 import rfid
 import text2speech
-import urllib2
 import urllib, mimetypes
 import push
 import config
@@ -106,22 +105,22 @@ class GogoD():
         outputBuffer.append(checksum)
 
         '''if TX_BUFFER[0] == const.REG_PACKET_TYPE_KEY_VALUE:
-            print "==================================================="
-            print outputBuffer'''
+            print("===================================================")
+            print(outputBuffer)'''
         outputString = ''.join(chr(c) for c in outputBuffer)
-        self.ser.write(outputString)
+        self.ser.write(outputString.encode())
 
     def send_on_keyvalue_buffer(self, packet_type, data):
         pre_output_buffer = [packet_type, len(data) + 3] + data + [0]
         if len(pre_output_buffer) > const.TX_REGISTER_SIZE:
             pre_output_buffer = pre_output_buffer[0:const.TX_REGISTER_SIZE - 1] + [0]
-        # print pre_output_buffer
+        # print(pre_output_buffer)
         self.send_buffer(pre_output_buffer)
         # TX_BUFFER = pre_output_buffer
         # checksum = sum(TX_BUFFER) & 0xff
         # outputBuffer = [const.TX_HEADER1, const.TX_HEADER2] + TX_BUFFER
         # outputBuffer.append(checksum)
-        # print outputBuffer
+        # print(outputBuffer)
         # outputString = ''.join(chr(c) for c in outputBuffer)
         # self.ser.write(outputString)
 
@@ -196,24 +195,24 @@ class GogoD():
             return
 
         if ord(text_cmd[0]) != 5:
-            # print "cmd header is wrong"
-            # print ord(text_cmd[0])
+            # print("cmd header is wrong")
+            # print(ord(text_cmd[0])
             # break
             return
 
         cmd = [ord(c) for c in text_cmd]
-        # print "cmd is %s " % cmd
+        # print("cmd is %s " % cmd)
 
         #Except Data Logging Packet and ignore frequent packet
         # if cmd[1] in [const.RPI_SHUTDOWN, const.RPI_REBOOT, const.RPI_SEND_MESSAGE, const.RPI_RECORD_TO_RPI, const.USE_CAMERA, const.START_FIND_FACE, const.STOP_FIND_FACE]:
         #     pass
         # elif not self.packet_limit_check.is_passed_limit(cmd[1]):
-        #     print 'time limit'
+        #     print('time limit')
         #     # continue
         #     return
 
         if not self.packet_limit_check.is_passed_limit(cmd[1]) and cmd[1] in [const.TAKE_SNAP_SHOT, const.TAKE_PREVIEW_IMAGE, const.SEND_MAIL, const.PLAY_SOUND, const.SHOW_IMAGE, const.EMAIL_SEND, const.SEND_SMS]:
-            print 'time limit'
+            print('time limit')
             # continue
             return
 
@@ -365,7 +364,7 @@ class GogoD():
             # value = (cmd[i+1] << 8) + value[i+2]
             file_name, value = text_cmd[2:].split(',')
             # value = (ord(value[0]) << 8) + (ord(value[1])) # high byte + low byte
-            # print "Logging : recording %d as %s" % (value, file_name)
+            # print("Logging : recording %d as %s" % (value, file_name))
 
             self.handle_data_logging(file_name, value)
 
@@ -449,13 +448,13 @@ class GogoD():
         self.TX_BUFFER[const.REG_CPU_TEMP] = int(self.pistat.temp_in_celsius)
         self.TX_BUFFER[const.REG_MEM_USED] = int(mem_info['percent'])
 
-        # print "CPU %i%%" % cpu_info['percent']
-        # print "MEM %i%%" % mem_info['percent']
+        # print("CPU %i%%" % cpu_info['percent'])
+        # print("MEM %i%%" % mem_info['percent'])
 
         # =============================================
         ip_list = ip.get_ip_list('eth0')
         if ip_list is not None:
-            # print "LAN = %s" % ip_list
+            # print("LAN = %s" % ip_list)
             self.TX_BUFFER[const.REG_IP_1] = int(ip_list[0])
             self.TX_BUFFER[const.REG_IP_2] = int(ip_list[1])
             self.TX_BUFFER[const.REG_IP_3] = int(ip_list[2])
@@ -469,13 +468,13 @@ class GogoD():
         # =============================================
         ip_list = ip.get_ip_list('wlan0')
         if ip_list is not None:
-            # print "WLAN = %s" % ip_list
+            # print("WLAN = %s" % ip_list)
             self.TX_BUFFER[const.REG_WLAN_IP_1] = int(ip_list[0])
             self.TX_BUFFER[const.REG_WLAN_IP_2] = int(ip_list[1])
             self.TX_BUFFER[const.REG_WLAN_IP_3] = int(ip_list[2])
             self.TX_BUFFER[const.REG_WLAN_IP_4] = int(ip_list[3])
         else:
-            # print "NO WLAN IP"
+            # print("NO WLAN IP")
             self.TX_BUFFER[const.REG_WLAN_IP_1] = 0
             self.TX_BUFFER[const.REG_WLAN_IP_2] = 0
             self.TX_BUFFER[const.REG_WLAN_IP_3] = 0
@@ -503,7 +502,7 @@ class GogoD():
         # if (self.counter_serial > 9):
         #     do_report = True
         #     self.counter_serial = 0
-        #     print 'report'
+        #     print('report')
 
         #     self.do_report()
 
@@ -523,7 +522,7 @@ class GogoD():
         # so that any commands that have modified the buffer
         # value can act on the buffer before it is sent
         # if do_report:
-        #     print 'report'
+        #     print('report')
             
 
     def handle_data_logging(self, name=None, value=None):
@@ -683,7 +682,7 @@ class Userform(tornado.web.RequestHandler):
 class Upload(tornado.web.RequestHandler):
     def post(self):
         fileinfo = self.request.files['filearg'][0]
-        # print "fileinfo is", fileinfo
+        # print("fileinfo is", fileinfo)
         fname = fileinfo['filename']
         extn = os.path.splitext(fname)[1]
         cname = str(uuid.uuid4()) + extn
@@ -726,7 +725,7 @@ class MediaHandler(tornado.web.RequestHandler):
         #     self.set_header("Content-type", "audio/wav")
         #
         # else:
-        #     print "Error: unknown media type %s" % file_type
+        #     print("Error: unknown media type %s" % file_type)
         #     return
 
         full_file_name = os.path.join(MEDIA_PATH, "%s.%s" % (file_name, file_type))
@@ -911,22 +910,22 @@ ws_addons_clients = []  # a dict that tracks the ws connections
 #         return True
 
 #     def open(self):
-#         print 'new image ws connection'
+#         print('new image ws connection')
 #         ws_clients.append(self)
 
 #     def on_message(self, message):
-#         print 'image-ws message received %s' % message
+#         print('image-ws message received %s' % message)
 
 #         message = message.split(',')
 #         if message[0] == "tapped":
-#             print "Tap event detected"
+#             print("Tap event detected")
 #             gogod.setTapEvent(message[1], message[2])  # send x,y pos as paremeters
 #         elif message[0] == "keyvalue":
-#             print "Key Value event detected"
+#             print("Key Value event detected")
 #             gogod.setKeyValueEvent(message[1], message[2])  # send key,value as paremeters
 
 #     def on_close(self):
-#         print 'connection closed'
+#         print('connection closed')
 #         ws_clients.remove(self)
 
 
