@@ -26,6 +26,15 @@ apt-get -qq update
 #sudo apt-get install rpi-update -y
 #sudo rpi-update
 
+# add sury php repository for php 5.6
+if [ "$(whoami)" != "root" ]; then
+    SUDO=sudo
+fi
+${SUDO} apt-get -qq install apt-transport-https lsb-release ca-certificates curl -y
+${SUDO} wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+${SUDO} sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
+${SUDO} apt-get -qq update
+
 echo " [step 2 of 4] installing GoGoD dependencies..."
 set -e
 # Dependencies
@@ -33,11 +42,13 @@ apt-get -qq install python-setuptools -y
 apt-get -qq install python-dev -y
 apt-get -qq install python-rpi.gpio -y
 apt-get -qq install python-pycurl -y
+apt-get -qq install libffi-dev -y
+apt-get -qq install libssl-dev -y
 #install pip
-curl https://bootstrap.pypa.io/get-pip.py | python
+curl https://bootstrap.pypa.io/pip/2.7/get-pip.py | python
 apt-get -qq install vlc -y
-apt-get -qq install php5-gd -y
-apt-get -qq install php5 -y
+apt-get -qq install php5.6-gd -y
+apt-get -qq install php5.6 -y
 apt-get -qq install gammu -y
 apt-get -qq install usb-modeswitch -y
 apt-get -qq install python-gammu -y
