@@ -9,7 +9,7 @@ Installation
 **Install via Command Line**
 
 ```bash
-$ curl -s https://raw.githubusercontent.com/LILCMU/gogo-daemon/master/gogod_install.sh | sudo sh
+curl -s https://raw.githubusercontent.com/LILCMU/gogo-daemon/master/gogod_install.sh | sudo sh
 ```
 
 
