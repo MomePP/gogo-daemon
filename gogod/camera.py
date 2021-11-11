@@ -92,7 +92,7 @@ class CameraControl():
     def is_device_connected(self):
         process = subprocess.Popen(["ls", "/dev/video0"], stdout=subprocess.PIPE)
         out, err = process.communicate()
-        return 'video0' in out
+        return 'video0' in out.decode('UTF-8')
 
     def use_camera(self):
         # global cascade, capture, frame_copy
@@ -106,13 +106,14 @@ class CameraControl():
                 return
 
             if self.cascade is None:
-                self.cascade = cv.Load(os.path.join(APPLICATION_PATH, "face.xml"))
+                xmlFile = cv.FileStorage(os.path.join(APPLICATION_PATH, "face.xml"), cv.FILE_STORAGE_READ)
+                self.cascade = xmlFile.getNode("haarcascade_frontalface_alt")
+                xmlFile.release()
 
-            self.capture = cv.CreateCameraCapture(0)
-
+            self.capture = cv.VideoCapture(0)
 
             if self.showVideo:
-                cv.NamedWindow("video", 1)
+                cv.namedWindow("video")
 
             self.set_resolution(640, 480)
 
@@ -131,7 +132,7 @@ class CameraControl():
             if self.find_face_is_on():
                 self.stop_find_face()
 
-            del self.capture
+            self.capture.release()
             self.capture = None
         except:
             print("Error in close_camera")
@@ -144,8 +145,8 @@ class CameraControl():
         return (self.is_finding_faces)
 
     def set_resolution(self, width, height):
-        cv.SetCaptureProperty(self.capture, cv.CV_CAP_PROP_FRAME_WIDTH, width)
-        cv.SetCaptureProperty(self.capture, cv.CV_CAP_PROP_FRAME_HEIGHT, height)
+        self.capture.set(cv.CAP_PROP_FRAME_WIDTH, width)
+        self.capture.set(cv.CAP_PROP_FRAME_HEIGHT, height)
 
     def start_find_face(self):
         if not self.camera_is_on():

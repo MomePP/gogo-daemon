@@ -57,7 +57,7 @@ class GogoD():
 
         consolelog.log(LOG_TITLE, "Application Path = %s" % APPLICATION_PATH)
 
-        self.ser = serial.Serial('/dev/ttyAMA0', 115200, timeout=0)
+        self.ser = serial.Serial('/dev/ttyAMA0', 921600, timeout=0)
         consolelog.log(LOG_TITLE, "Serial monitor started")
 
         self.pistat = pistat.PiStats()
@@ -107,8 +107,7 @@ class GogoD():
         '''if TX_BUFFER[0] == const.REG_PACKET_TYPE_KEY_VALUE:
             print("===================================================")
             print(outputBuffer)'''
-        outputString = ''.join(chr(c) for c in outputBuffer)
-        self.ser.write(outputString.encode())
+        self.ser.write(bytearray(outputBuffer))
 
     def send_on_keyvalue_buffer(self, packet_type, data):
         pre_output_buffer = [packet_type, len(data) + 3] + data + [0]
@@ -183,24 +182,25 @@ class GogoD():
         for client in ws_addons_clients:
             client.write_message("%s,%s" % (key, value))
 
-    def process_cmd(self, text_cmd):
+    def process_cmd(self, cmd):
 
-        if len(text_cmd) == 0:
+        if len(cmd) == 0:
             # break
             return
 
-        if len(text_cmd) < 2:
+        if len(cmd) < 2:
             consolelog.log(LOG_TITLE, "cmd is too short")
             # break
             return
 
-        if ord(text_cmd[0]) != 5:
+        if cmd[0] != 5:
             # print("cmd header is wrong")
             # print(ord(text_cmd[0])
             # break
+            print('gogo log: ', cmd)
             return
-
-        cmd = [ord(c) for c in text_cmd]
+        
+        # cmd = [ord(c) for c in text_cmd]
         # print("cmd is %s " % cmd)
 
         #Except Data Logging Packet and ignore frequent packet
@@ -737,7 +737,7 @@ class MediaHandler(tornado.web.RequestHandler):
             return
 
     def getMIME(self, full_file_name):
-        url = urllib.pathname2url(full_file_name)
+        url = urllib.request.pathname2url(full_file_name)
         return mimetypes.guess_type(url)[0]
 
 
@@ -877,7 +877,7 @@ class WWWhtmlHandler(tornado.web.RequestHandler):
         jsonFile = open(CONFIG_FILE, "r")
         config_data = json.load(jsonFile)
         config_data['hostname_port'] = "%s://%s" % (self.request.protocol, self.request.host)
-        config_data['hostname'] = string.replace(config_data['hostname_port'], ':8888', '')
+        config_data['hostname'] = config_data['hostname_port'].replace(':8888', '')
         config_data['header_path'] = os.path.join(WWW_PATH, "include_header.html")
         # config_data['request'] = self.request
         config_data['uri'] = self.request.uri

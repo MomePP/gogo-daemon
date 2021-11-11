@@ -47,8 +47,9 @@ apt-get -qq install libssl-dev -y
 #install pip
 curl https://bootstrap.pypa.io/get-pip.py | python3
 apt-get -qq install vlc -y
-apt-get -qq install php5.6-gd -y
 apt-get -qq install php5.6 -y
+apt-get -qq install php5.6-gd -y
+apt-get -qq install php5.6-mbstring -y
 apt-get -qq install gammu -y
 apt-get -qq install usb-modeswitch -y
 apt-get -qq install python3-gammu -y
