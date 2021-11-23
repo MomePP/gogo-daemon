@@ -66,11 +66,11 @@ class connectWifi(threading.Thread):
 
         # s = wifi.Scheme.find(_wlan_name, self.SSID)
         # if s is not None:
-        #     print("found %s in saved configuration" % self.SSID)
+        #     print "found %s in saved configuration" % self.SSID
         #     s.activate()
         #
         # else:
-        #     print("No saved config for this network")
+        #     print "No saved config for this network"
         try:
             cells = wifi.Cell.all(_wlan_name)
         except:
@@ -173,6 +173,7 @@ def autoconnect(status_callback=None):
         _status_callback = status_callback
 
     ip_list = ip.get_ip_list('wlan0')
+    print(ip_list)
     if ip_list is None and not _flag_run and not _flag_disconnected:
         connect(_status_callback, None, None)
 

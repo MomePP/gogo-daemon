@@ -17,7 +17,7 @@ CONTENT_META        = '<meta  name = "viewport" content = "initial-scale = 1.0, 
 
 class WebUIFunction():
     def __init__(self):
-        print
+        print()
         print("WebUI\t : init")
 
     def list_html_files(self):
@@ -27,7 +27,7 @@ class WebUIFunction():
             file_list.extend(filenames)
             break
         # filter only html file
-        file_list = [e for e in file_list if e not in exclude_list and '.htm' in e]
+        file_list = [e for e in file_list if e not in exclude_list and '.html' in e]
 
         return file_list
 

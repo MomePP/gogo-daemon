@@ -17,6 +17,7 @@ import time
 import json
 import urllib, base64
 from urllib.request import urlopen
+from urllib.request import Request
 import os
 import config
 import consolelog
@@ -51,7 +52,7 @@ class BackgroundCheck(object):
         consolelog.log(LOG_TITLE, "background started")
         while True:
             # Do something
-            # print('Status : ' + self.status))
+            # print('Status : ' + self.status)
             if (self.status=="none"):
                 self.new_ws_connection()
             elif (self.status == "close"):
@@ -119,7 +120,7 @@ class PushBullet(threading.Thread):
         flag_run = False
         self.set_status("error")
         consolelog.log(LOG_TITLE, "WS Error")
-        #print(error)
+        #print error
 
     def on_close(self, ws):
         global flag_run
@@ -133,7 +134,7 @@ class PushBullet(threading.Thread):
 
     def getToken(self):
         token =  self.conf.getPushbulletToken()
-        # print(token)
+        # print token
         if ((self.token is not None) and (self.token != token)):
             consolelog.log(LOG_TITLE, "Token changed by user")
             self.set_status("close")
@@ -153,20 +154,20 @@ class PushBullet(threading.Thread):
         return (len(token)==34)
 
     def fetch_pushes(self, timestamp=1429750800):
-        request = urllib.request("https://api.pushbullet.com/v2/pushes?modified_after=%s" % timestamp)
+        request = Request("https://api.pushbullet.com/v2/pushes?modified_after=%s" % timestamp)
         request.add_header("Authorization", "Bearer %s" % self.token)
         try:
             result = urlopen(request)
             json_data = result.read()
             self.last_timestamp = time.time()
             data = json.loads(json_data)
-            #print(data)
+            #print data
             if 'pushes' in data:
                 for entry in data['pushes']:
                     if (not entry['dismissed']):
                         if (len(entry['title'].split(' '))==1):
                             self.callback_setKeyValueEvent(entry['title'],entry['body'])
-                        # print(data)
+                        # print data
         except:
             consolelog.log(LOG_TITLE, "Fetch Error")
 

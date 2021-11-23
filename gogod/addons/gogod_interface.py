@@ -61,14 +61,14 @@ class GogodInterfacce(threading.Thread):
 
     def on_error(self, ws, error):
         print("Gogod Interface \t: Error")
-        # print(error)
+        # print error
 
     def on_close(self, ws):
         print("Gogod Interface \t: Closed")
         self.ws = None
 
     # def on_open(self, ws):
-    #     print("Gogod Interfacce \t: Connected")
+    #     print "Gogod Interfacce \t: Connected"
     #     #self.addons_handler()
 
     def on_open(self, ws):

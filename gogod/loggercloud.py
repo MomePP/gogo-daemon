@@ -21,6 +21,7 @@ from io import StringIO
 import copy
 import urllib
 from urllib.request import urlopen
+from urllib.request import Request
 import consolelog
 
 _rate_limit_cloud = 1 #seconds
@@ -139,7 +140,7 @@ class CloudDataThread(threading.Thread):
         data['key'] = self.api_key
 
         params = urllib.urlencode(dictData)
-        request = urllib.request("https://data.learninginventions.org/update?key=%s&%s" % (self.api_key, params) )
+        request = Request("https://data.learninginventions.org/update?key=%s&%s" % (self.api_key, params) )
         try:
             # r = requests.post("https://data.learninginventions.org/update", data=data, ,verify=False)
             # return_data = r.text
@@ -223,12 +224,12 @@ class CloudDataThread(threading.Thread):
 
         if len(self.data_from_queue)>0:
             if self.updateData(self.data_from_queue):
-                print("queue")
-                print(self.data_from_queue)
+                print "queue"
+                print self.data_from_queue
                 self.data_from_queue = {}
         elif not self.queue_not_upload.empty():
             self.data_from_queue = self.queue_not_upload.get()
-            print(self.data_from_queue)
+            print self.data_from_queue
             if self.updateData(self.data_from_queue):
                 self.data_from_queue = {}
         '''

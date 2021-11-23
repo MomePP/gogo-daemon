@@ -15,12 +15,12 @@
 import pyorient
 import datetime
 import threading
-import Queue
+import queue
 import time
 import loggercloud
 
 # Declare the global variables
-_queue_records = Queue.Queue()
+_queue_records = queue.Queue()
 _db_handle = None
 _last_handle = {'field1':0}
 _rate_limit = 0.5 #seconds

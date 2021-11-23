@@ -135,11 +135,11 @@ class dataLogger():
         print("plot")
         '''
         for file_name in file_list.split(","):
-            print("plotting %s" % file_name)
+            print "plotting %s" % file_name
 
             full_name = os.path.join(self.log_path, file_name + ".csv")
             if not os.path.isfile(full_name):
-                print("Plot file not found %s" % full_name)
+                print "Plot file not found %s" % full_name
                 return
 
             # 0 = plot all records
@@ -179,7 +179,7 @@ class dataLogger():
         '''
         # for line in self.get_last_n_lines(data_points, full_name).split('\n'):
         #
-        #     print(line)
+        #     print line
 
 
     def get_last_n_lines(self, n, fileName):

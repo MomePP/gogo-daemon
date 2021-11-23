@@ -72,8 +72,9 @@ class TelegramBot():
 
     def send_telegram_message(self, message):
         global _latest_sender_id, _bot
-
+        print(_latest_sender_id)
         if _latest_sender_id is not None and _bot is not None:
+            print('send message')
             _bot.sendMessage(_latest_sender_id, text=message)
 
     def send_telegram_photo(self, filename):

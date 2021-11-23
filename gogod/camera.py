@@ -7,6 +7,7 @@ import sys
 import cv2 as cv
 from datetime import datetime
 import subprocess
+import numpy as np
 
 APPLICATION_PATH = os.path.abspath(os.path.dirname(sys.argv[0]))
 PICTURE_PATH = os.path.join(APPLICATION_PATH, "www", "media", "snapshots")
@@ -32,12 +33,14 @@ class CameraControl():
     # return True if a face is found in an image
     def detect_no_draw(self, img):
         # allocate temporary images
-        gray = cv.CreateImage((img.width, img.height), 8, 1)
-        small_img = cv.CreateImage((cv.Round(img.width / self.image_scale),
-                                    cv.Round(img.height / self.image_scale)), 8, 1)
+        # gray = cv.CreateImage((img.width, img.height), 8, 1)
+        # small_img = cv.CreateImage((cv.Round(img.width / self.image_scale),
+        #                             cv.Round(img.height / self.image_scale)), 8, 1)
+        gray = np.zeros((320,240),np.uint8)
+        small_img = np.zeros((320,240),np.uint8)
 
         # convert color input image to grayscale
-        cv.CvtColor(img, gray, cv.CV_BGR2GRAY)
+        cv.cvtColor(img, gray, cv.COLOR_BGRA2GRAY)
 
         # scale input image for faster processing
         cv.Resize(gray, small_img, cv.CV_INTER_LINEAR)
@@ -57,9 +60,11 @@ class CameraControl():
     def detect_and_draw(self, img):
 
         # allocate temporary images
-        gray = cv.CreateImage((img.width, img.height), 8, 1)
-        small_img = cv.CreateImage((cv.Round(img.width / self.image_scale),
-                                    cv.Round(img.height / self.image_scale)), 8, 1)
+        # gray = cv.CreateImage((img.width, img.height), 8, 1)
+        # small_img = cv.CreateImage((cv.Round(img.width / self.image_scale),
+        #                             cv.Round(img.height / self.image_scale)), 8, 1)
+        gray = np.zeros((320,240),np.uint8)
+        small_img = np.zeros((320,240),np.uint8)
 
         # convert color input image to grayscale
         cv.CvtColor(img, gray, cv.CV_BGR2GRAY)
@@ -169,7 +174,8 @@ class CameraControl():
     def flushCameraBuffer(self):
 
         for i in range(6):
-            cv.GrabFrame(self.capture)
+            # cv.GrabFrame(self.capture)
+            self.capture.grab()
             # if not cv.GrabFrame(self.capture):
             #     break;
 
@@ -179,19 +185,26 @@ class CameraControl():
             return False
 
         self.flushCameraBuffer()  # this reduces the frame delay
-        frame = cv.QueryFrame(self.capture)
+        frame = self.capture.read()
+        print(frame)
         if frame is None:
             self.close_camera()
             return False
 
         if not frame:
             cv.WaitKey(0)
-        if not self.frame_copy:
-            self.frame_copy = cv.CreateImage((frame.width, frame.height),
-                                             cv.IPL_DEPTH_8U, frame.nChannels)
+        if self.frame_copy is not None:
+            # self.frame_copy = cv.CreateImage((frame.width, frame.height),
+            #                                  cv.IPL_DEPTH_8U, frame.nChannels)
+            # self.frame_copy = cv.resize(frame,(640, 480))
+            # color = (255,0,255)
+            # print(frame)
+            # self.frame_copy = np.full((480,640,3), color, dtype=np.uint8)
+            self.frame_copy = np.zeros((320,240), np.uint8)
 
-        if frame.origin == cv.IPL_ORIGIN_TL:
-            cv.Copy(frame, self.frame_copy)
+        if frame[0]:
+            # cv.Copy(frame, self.frame_copy)
+            self.frame_copy = np.copy(frame)
         else:
             cv.Flip(frame, self.frame_copy, 0)
 
@@ -208,12 +221,13 @@ class CameraControl():
             self.use_camera()
 
         self.flushCameraBuffer()  # this reduces the frame delay
-        frame = cv.QueryFrame(self.capture)
+        # frame = cv.QueryFrame(self.capture)
+        frame = self.capture.read()[1]
         self.create_folder_if_not_exist()
         image_name = "capture_%s.jpg" % time.strftime("%y_%m_%d_%H_%M_%S")
         image_path = os.path.join(PICTURE_PATH, image_name)
-        cv.SaveImage(image_path, frame)
-        cv.SaveImage(os.path.join(PICTURE_PATH, "current.jpg"), frame)  # this is the preview image
+        cv.imwrite(image_path, frame)
+        cv.imwrite(os.path.join(PICTURE_PATH, "current.jpg"), frame)  # this is the preview image
         return image_name
 
     def take_preview_image(self):
@@ -222,12 +236,14 @@ class CameraControl():
             self.use_camera()
 
         self.flushCameraBuffer()  # this reduces the frame delay
-        frame = cv.QueryFrame(self.capture)
+        frame = self.capture.read()[1]
+        # frame = cv.QueryFrame(self.capture)
         if frame is None:
             self.close_camera()
             return
         self.create_folder_if_not_exist()
-        cv.SaveImage(os.path.join(PICTURE_PATH, "current.jpg"), frame)  # this is the preview image
+        cv.imwrite(os.path.join(PICTURE_PATH, "current.jpg"), frame)  # this is the preview image
+        
 
     def create_folder_if_not_exist(self):
         if not os.path.exists(PICTURE_PATH):

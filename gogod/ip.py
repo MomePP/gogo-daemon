@@ -1,14 +1,10 @@
 import socket
 import fcntl
 import struct
+import netifaces as ni
 
 def get_ip_address(ifname):
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    return socket.inet_ntoa(fcntl.ioctl(
-        s.fileno(),
-        0x8915,  # SIOCGIFADDR
-        struct.pack('256s', ifname.encode('UTF-8'))
-    )[20:24])
+    return ni.ifaddresses(ifname)[2][0]["addr"]
 
 def get_ip_list(ifname):
     ipstring = ""

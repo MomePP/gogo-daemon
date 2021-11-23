@@ -22,6 +22,13 @@ ADDONS_PATH         = os.path.join(APPLICATION_PATH, "addons")
 MEDIA_PATH          = os.path.join(APPLICATION_PATH, "www", "media")
 LOG_TITLE           = "Config"
 
+# class MyEncoder(json.JSONEncoder):
+#     def default(self, obj):
+#         if isinstance(obj, np.ndarray):
+#             return obj.tolist()
+#         elif isinstance(obj, bytes):
+#             return str(obj, encoding='utf-8')
+#         return json.JSONEncoder.default(self, obj)
 
 class Config():
     def __init__(self, status_callback=None):
@@ -91,6 +98,8 @@ class Config():
             return {}
         return None
 
+    
+
     def save_to_file(self, params):
 
         if self.status_callback is not None and (self.gmail_username in params or self.gmail_password in params):
@@ -100,6 +109,7 @@ class Config():
         if os.path.exists(CONFIG_FILE):
             jsonFile = open(CONFIG_FILE, "r")
             data = json.load(jsonFile)
+            print(data)
             jsonFile.close()
 
             for key, value in params.items():
@@ -111,9 +121,10 @@ class Config():
                     value = None if value == "None" else value
                     data[key] = self.enc.EncodeAES(value)
                 else:
-                    data[key] = value
-
-                self.current[key] = value
+                    if isinstance(value, dict):
+                        data[key] = value
+                    else:
+                        data[key] = value.decode("utf-8") 
 
 
             jsonFile = open(CONFIG_FILE, "w+")
@@ -207,7 +218,7 @@ class Config():
         cmd = "python -m py_compile %s" % filename
         p = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
-        #print(err)
+        #print err
         return {'result': err == "", 'error': err}
 
     def get_account(self, param):
@@ -236,7 +247,7 @@ class Config():
         return True
 
     def getPushbulletToken(self):
-        # print("Config : Getting Pushbullet Token")
+        # print "Config : Getting Pushbullet Token"
         return self.get(self.pushbullet_token)
 
     def savePushbulletToken(self, token):
@@ -287,7 +298,6 @@ class Config():
         return file_list
 
     def api_save_config(self, params):
-
         if 'raspberry-pi' not in params:
             return False
         del params['raspberry-pi']
@@ -359,9 +369,17 @@ class Encryption:
 
     def EncodeAES(self, s):
         c = AES.new(self.key, AES.MODE_CBC, self.iv)
+        if not isinstance(s , dict):
+            s = s.decode()
+        else:
+            s = json.dumps(s)
+
+        # s = s.decode()
         s = self.pad(s)
         s = c.encrypt(s)
         s = base64.b64encode(s)
+        s = s.decode("utf-8")
+        print(type(s))
         return s.replace("+", self.replace_plus)
 
     def DecodeAES(self, enc):
@@ -377,5 +395,5 @@ class Encryption:
 
 if __name__ == "__main__":
     con = Config()
-    #print(con.set_addons_enable_active('telegrambot.py'))
+    #print con.set_addons_enable_active('telegrambot.py')
     print(con.get_addons())

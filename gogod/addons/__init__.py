@@ -21,7 +21,7 @@ class Addons (threading.Thread):
         for f in os.listdir(os.path.abspath(dir)):       
             module_name, ext = os.path.splitext(f) # Handles no-extension files, etc.
             #if module_name != '__init__' and ext == '.py': # Important, ignore .pyc/other files.
-                ##print('Addons \t: imported %s' % (module_name))
+                ##print 'Addons \t: imported %s' % (module_name)
                 #module = __import__(module_name)
                 #library_list.append(module)
                 #module.sendKeyValue = self.sendKeyValue
@@ -57,5 +57,5 @@ class Addons (threading.Thread):
             if b in module_methods:
                 module_methods.remove(b)
 
-        # print(module_methods)
+        # print module_methods
         return module_methods

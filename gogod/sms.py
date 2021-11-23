@@ -1,3 +1,4 @@
+import subprocess
 import threading
 import gammu
 import os
@@ -70,6 +71,7 @@ MessageContent ="55534243123456780000000000000011060000000000000000000000000000"
         self.config()
         try:
             #command_string = 'sudo gammu sendsms TEXT ' + self.sms_number + ' -textutf8 "' + self.sms_message + '" '
+            #print commands.getoutput(command_string)
             self.status = SmsStatus.ERROR
             sm = gammu.StateMachine()
             sm.ReadConfig()
@@ -112,10 +114,10 @@ def read_all_sms():
          else:
             sms = sm.GetNextSMS(Folder=0, Location=i-1)
          print(sms[0]['Number'])     # Sender's phone number
-         print(sms[0]['DateTime'])   # Receive date and time
-         print(sms[0]['State'])      # message state (unread/read)
-         print(sms[0]['Text'])       # SMS content
-         print("==================================")
+         print (sms[0]['DateTime'])   # Receive date and time
+         print (sms[0]['State'])      # message state (unread/read)
+         print (sms[0]['Text'])       # SMS content
+         print ("==================================")
 
     print("Done")
 

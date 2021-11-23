@@ -739,7 +739,7 @@ class RFIDHandle(threading.Thread):
                 self.tagStatus = RFIDStatus.FOUNDTAG
             else:
                 self.tagStatus = RFIDStatus.NOTAG
-                # print("RFID : RFID Tag not found")
+                # print "RFID : RFID Tag not found"
             self.updateStatusCallback()
             time.sleep(0.5)
         print("RFID : closed")
@@ -771,7 +771,7 @@ class RFIDHandle(threading.Thread):
             self.status = self.clearBit(self.status,1);
         elif self.tagStatus == RFIDStatus.FOUNDTAG:
             self.status = self.setBit(self.status,1);
-        #print("RFID : status "+ str(self.readerStatus) + " " + str(self.tagStatus))
+        #print "RFID : status "+ str(self.readerStatus) + " " + str(self.tagStatus)
         self.status_callback(self.status)
 
 

@@ -2,6 +2,7 @@
 # Modified by Arnan (Roger) Sipitakiat
 
 import re, time, sys
+# import commands
 
 class PiStats(object):
   def __init__(self):
